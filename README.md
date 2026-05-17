@@ -188,3 +188,5 @@ Free-tier on every layer:
 - **Resend** — 100 emails/day
 
 Zero server management. Zero backend code.
+
+Built by Aniruddha Saini for AtomQuest.
