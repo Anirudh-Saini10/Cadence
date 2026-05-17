@@ -2,30 +2,113 @@
 
 > Goal Setting & Performance Tracking Portal — built for **AtomQuest Hackathon 1.0**.
 
-Cadence digitizes the full goal-management lifecycle for an enterprise: employees author goal sheets with weightage validation, managers approve and check in quarterly, and HR/admin governs cycles, audits, and analytics. The entire stack runs on free tiers — Supabase + Vercel — with row-level security enforcing the role model at the database layer.
+Cadence digitizes the full goal-management lifecycle for an enterprise: employees author weighted OKRs with real-time validation, managers review and approve via a structured workflow, quarterly check-ins auto-score against 5 UoM formulas, and HR/Admin governs performance cycles, audits every action, and monitors org-wide analytics. Row-level security enforces the role model directly at the database layer.
 
-## Stack
+**Live Demo:** [cadence-growth.vercel.app](https://cadence-growth.vercel.app)
 
-| Layer | Tech |
-|---|---|
-| Frontend | React + Vite + TypeScript + TailwindCSS + shadcn-style UI |
-| Data + Auth | Supabase (Postgres + Auth + RLS) — no custom backend |
-| Charts | Recharts |
-| Email (escalation) | Resend |
-| Hosting | Vercel (frontend) + Supabase Cloud |
+---
 
+## What We Built
 
-<img width="503" height="631" alt="image" src="https://github.com/user-attachments/assets/5a2dd271-65ac-49f9-a357-257e16bd0dd3" />
+### Core Workflow (End-to-End)
 
+| Step | Actor | Action |
+|------|-------|--------|
+| 1 | Admin | Opens a performance cycle (e.g., FY 2025-26) |
+| 2 | Employee | Creates 3-8 goals across 8 thrust areas with weightage |
+| 3 | System | Validates total weightage = 100%, min 10% per goal, max 8 goals |
+| 4 | Employee | Submits goal sheet for manager approval |
+| 5 | Manager | Reviews goals, approves (locks) or returns for rework |
+| 6 | Admin | Advances cycle to Q1/Q2/Q3/Q4 — check-ins open |
+| 7 | Employee | Records actual achievement; system auto-computes score |
+| 8 | Manager | Reviews quarterly check-ins, adds feedback |
+| 9 | Admin | Monitors completion rates, runs escalation nudges, exports reports |
 
-## Quick start
+### 5 Auto-Scoring UoM Formulas
+
+| Type | Formula | Example |
+|------|---------|---------|
+| **Min** (lower is better) | `(Target / Actual) * 100` | Ticket resolution TAT |
+| **Max** (higher is better) | `(Actual / Target) * 100` | Revenue, retention rate |
+| **Zero** (zero = success) | `100 - (Actual / Target * 100)` | Security incidents |
+| **Timeline** (deadline-based) | `% of milestones completed on time` | Certification, project launch |
+| **Milestone** (binary gates) | `(Completed milestones / Total) * 100` | Feature rollout phases |
+
+---
+
+## Feature Map
+
+### Phase 1 — Goal Setting
+- [x] Weighted OKR creation (8 thrust areas)
+- [x] Live weightage tracker with color-coded progress bar
+- [x] Auto-validation: total = 100%, min 10% per goal, max 8 goals
+- [x] Goal submission + approval workflow
+- [x] Manager return-to-draft with comments
+- [x] Goal locking on approval
+
+### Phase 2 — Check-ins & Scoring
+- [x] Quarterly check-in entry (Q1, Q2, Q3, Q4/Annual)
+- [x] 5 UoM formulas with automatic score calculation
+- [x] Achievement vs Target visualization
+- [x] Manager review + inline comments
+- [x] Cross-cycle analytics and trend lines
+
+### Admin & Governance
+- [x] Performance cycle management (open, advance phase, reset)
+- [x] User management — edit names, emails, roles
+- [x] Admin goal reset — force-return locked goals to draft
+- [x] Full audit log of every approval, rejection, phase change
+- [x] Department-wise analytics with bar charts, pie charts, trend lines
+- [x] CSV export of analytics data
+- [x] Escalation engine with configurable rules + email notifications (Resend)
+- [x] Demo data seeder — one-click populate realistic goals for all users
+
+### UX & Polish
+- [x] Beautiful landing page with feature grid
+- [x] Role-aware Dashboard with stat cards and quick actions
+- [x] Demo view switcher — instantly flip Employee/Manager/Admin without logout
+- [x] Role switcher persists across refreshes (localStorage)
+- [x] Fast loading with React Query caching (5s staleTime)
+- [x] Error states everywhere — no infinite spinners
+- [x] Responsive sidebar with zero duplicate nav items
+
+---
+
+## Tech Stack
+
+| Layer | Tech | Why |
+|-------|------|-----|
+| Frontend | React 18 + Vite + TypeScript | Fast DX, type-safe |
+| Styling | TailwindCSS + shadcn/ui primitives | Consistent, accessible |
+| State | Zustand (auth) + TanStack Query (server) | Minimal boilerplate, caching |
+| Data + Auth | Supabase (Postgres + Auth + RLS) | No backend code, security at DB layer |
+| Charts | Recharts | Lightweight, React-native |
+| Email | Resend | 100 emails/day free tier |
+| Hosting | Vercel | Auto-deploy from GitHub, free tier |
+
+---
+
+## Evaluation Criteria Alignment
+
+| Criteria | How Cadence Delivers |
+|----------|----------------------|
+| **Functionality** | Full E2E flow: create → submit → approve → check-in → score → analyze |
+| **Adherence to BRD** | Weightage = 100%, max 8 goals, min 10%, 5 UoM types, 9 phases, validation enforced |
+| **User Friendliness** | Demo switcher, fast navigation, error messages, consistent UX across roles |
+| **Bugs** | Error handling on every query, no infinite loaders, deduplicated nav |
+| **Good-to-Have** | Escalation engine with Resend email, CSV export, demo seeder, admin user management |
+| **Cost Optimisation** | Free tier on every layer: Vercel + Supabase + Resend. Zero server management. Zero backend code.
+
+---
+
+## Quick Start
 
 ```powershell
 # 1. Install deps
 npm install
 
 # 2. Set up Supabase (see supabase/README.md for full steps)
-#    - Create project, 4 demo auth users, run 4 SQL migrations.
+#    - Create project, 4 demo auth users, run SQL migrations.
 
 # 3. Configure env
 copy .env.example .env
@@ -37,30 +120,71 @@ npm run dev
 
 App runs at http://localhost:5173.
 
-## Demo accounts
+---
+
+## Demo Accounts
 
 All passwords: `cadence123`
 
-| Email | Role |
-|---|---|
-| `admin@cadence.demo`   | Admin / HR |
-| `manager@cadence.demo` | L1 Manager (Rohan) |
-| `priya@cadence.demo`   | Employee (reports to Rohan) |
-| `arjun@cadence.demo`   | Employee (reports to Rohan) |
+| Email | Role | Reports To |
+|-------|------|------------|
+| `admin@cadence.demo` | Admin / HR | — |
+| `manager@cadence.demo` | Manager (Rohan) | Admin |
+| `priya@cadence.demo` | Employee | Rohan |
+| `arjun@cadence.demo` | Employee | Rohan |
 
-When logged in as **admin**, a **Demo view** switcher appears in the header so judges can flip between Employee / Manager / Admin dashboards without re-authenticating. RLS still enforces the real role for any data writes.
+**Pro tip for judges:** Log in as **Admin** and use the **Demo View** switcher (top-right) to instantly see Employee, Manager, and Admin dashboards without re-authenticating.
 
-## Repo map
+---
+
+## Repo Map
 
 ```
-supabase/migrations/   # SQL: schema → RLS → triggers → seed (run in order)
-src/lib/               # Supabase client, utils, UoM scoring
-src/components/        # AppShell, RoleSwitcher, StatusBadge, UI primitives
-src/stores/            # Zustand auth store
-src/hooks/             # TanStack Query hooks
-src/pages/             # Login + role-specific pages
-src/types/database.ts  # Hand-typed Supabase schema mirror
+supabase/migrations/         # SQL: schema → RLS → triggers → seed
+src/
+  pages/
+    LandingPage.tsx          # Marketing page with feature grid
+    LoginPage.tsx            # Auth with demo account shortcuts
+  features/
+    dashboard/
+      DashboardPage.tsx      # Role-aware stats + quick actions
+    goals/
+      GoalSheetPage.tsx      # Create, edit, submit goals
+      WeightageBar.tsx       # Live progress tracker
+    checkins/
+      CheckinsPage.tsx       # Quarterly progress entry
+      TeamCheckinsPage.tsx   # Manager review of team check-ins
+    team/
+      TeamListPage.tsx       # Manager's direct reports
+      TeamReviewPage.tsx     # Approve/return employee goals
+    admin/
+      CycleAdminPage.tsx     # Open/advance/reset cycles
+      UsersAdminPage.tsx     # Edit users, reset goals
+      AuditLogPage.tsx       # Full action history
+      DemoSeeder.tsx         # One-click demo data
+    analytics/
+      AnalyticsPage.tsx      # Charts + CSV export
+    escalations/
+      EscalationsPage.tsx    # Rules + email notifications
+  components/
+    AppShell.tsx             # Sidebar, header, role switcher
+  stores/
+    authStore.ts             # Zustand auth + demo role persistence
+  lib/
+    supabase.ts              # Supabase client
+    scoring.ts               # UoM scoring formulas
+    export.ts                # CSV download utility
+  types/
+    database.ts              # Typed Supabase schema mirror
 ```
+
+---
+
 ## Cost
 
-Free-tier on every layer: Vercel hosting, Supabase Postgres + Auth + 500 MB, Resend 100 emails/day. Zero server management.
+Free-tier on every layer:
+- **Vercel** — unlimited static hosting
+- **Supabase** — Postgres + Auth + 500 MB storage
+- **Resend** — 100 emails/day
+
+Zero server management. Zero backend code.
