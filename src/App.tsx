@@ -12,6 +12,8 @@ import { AppShell } from "@/components/AppShell";
 import { LoginPage } from "@/pages/LoginPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
 import { GoalSheetPage } from "@/features/goals/GoalSheetPage";
+import { TeamListPage } from "@/features/team/TeamListPage";
+import { TeamReviewPage } from "@/features/team/TeamReviewPage";
 import type { UserRole } from "@/types/database";
 
 const qc = new QueryClient({
@@ -64,7 +66,8 @@ export default function App() {
             <Route index element={<RoleHome />} />
             <Route path="goals"             element={<GoalSheetPage />} />
             <Route path="checkins"          element={<PlaceholderPage title="Check-ins"        description="Quarterly achievement entry. UoM auto-scores on save."          phase="6 Check-ins" />} />
-            <Route path="team"              element={<PlaceholderPage title="Team"             description="Review and approve direct reports' goal sheets."                phase="5 Approval Workflow" />} />
+            <Route path="team"              element={<TeamListPage />} />
+            <Route path="team/:employeeId"  element={<TeamReviewPage />} />
             <Route path="team/checkins"     element={<PlaceholderPage title="Team Check-ins"   description="Planned vs. Actual per report, with structured comments."       phase="6 Check-ins" />} />
             <Route path="admin/cycles"      element={<PlaceholderPage title="Cycle Management" description="Open/close cycles, configure dates, unlock goals."              phase="7 Audit + Cycles" />} />
             <Route path="admin/audit"       element={<PlaceholderPage title="Audit Log"        description="Every post-lock change with diff and actor."                    phase="7 Audit + Cycles" />} />
