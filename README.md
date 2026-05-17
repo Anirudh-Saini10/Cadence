@@ -61,11 +61,6 @@ src/hooks/             # TanStack Query hooks
 src/pages/             # Login + role-specific pages
 src/types/database.ts  # Hand-typed Supabase schema mirror
 ```
-
-## Build phases
-
-See `/C:/Users/markw/.windsurf/plans/cadence-build-plan-c2ead5.md` for the full phased roadmap. Currently shipped: **Phase 1 (Infra)** + **Phase 2 (Auth + Shell + Role Switcher)**.
-
 ## Cost
 
 Free-tier on every layer: Vercel hosting, Supabase Postgres + Auth + 500 MB, Resend 100 emails/day. Zero server management.
