@@ -33,7 +33,7 @@ export function WeightageBar({
   const pct = Math.min(total, 100);
 
   return (
-    <div className="sticky top-0 z-10 -mx-6 mb-6 border-b bg-card/95 px-6 py-3 shadow-sm backdrop-blur">
+    <div className="-mx-6 mb-6 border-b bg-card px-6 py-3">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           {isComplete ? (
