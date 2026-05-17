@@ -1,5 +1,4 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database";
 
 const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
@@ -12,7 +11,10 @@ if (!url || !anonKey) {
   );
 }
 
-export const supabase = createClient<Database>(
+// Untyped client — we use hand-written Row types in @/types/database and cast
+// .select() results explicitly. Avoids fighting supabase-js's strict generic
+// inference for hand-typed schemas.
+export const supabase = createClient(
   url ?? "http://localhost:54321",
   anonKey ?? "public-anon-key-missing",
   {

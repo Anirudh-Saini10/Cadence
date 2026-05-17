@@ -11,6 +11,7 @@ import { useAuth, useEffectiveRole } from "@/stores/authStore";
 import { AppShell } from "@/components/AppShell";
 import { LoginPage } from "@/pages/LoginPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
+import { GoalSheetPage } from "@/features/goals/GoalSheetPage";
 import type { UserRole } from "@/types/database";
 
 const qc = new QueryClient({
@@ -61,7 +62,7 @@ export default function App() {
             }
           >
             <Route index element={<RoleHome />} />
-            <Route path="goals"             element={<PlaceholderPage title="My Goals"         description="Create up to 8 goals totaling 100% weightage. Draft auto-saves." phase="3–4 Goal Sheet" />} />
+            <Route path="goals"             element={<GoalSheetPage />} />
             <Route path="checkins"          element={<PlaceholderPage title="Check-ins"        description="Quarterly achievement entry. UoM auto-scores on save."          phase="6 Check-ins" />} />
             <Route path="team"              element={<PlaceholderPage title="Team"             description="Review and approve direct reports' goal sheets."                phase="5 Approval Workflow" />} />
             <Route path="team/checkins"     element={<PlaceholderPage title="Team Check-ins"   description="Planned vs. Actual per report, with structured comments."       phase="6 Check-ins" />} />
