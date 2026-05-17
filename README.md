@@ -1,6 +1,5 @@
 # Cadence
 
-
 > Goal Setting & Performance Tracking Portal — built for **AtomQuest Hackathon 1.0**.
 
 Cadence digitizes the full goal-management lifecycle for an enterprise: employees author goal sheets with weightage validation, managers approve and check in quarterly, and HR/admin governs cycles, audits, and analytics. The entire stack runs on free tiers — Supabase + Vercel — with row-level security enforcing the role model at the database layer.
@@ -14,6 +13,10 @@ Cadence digitizes the full goal-management lifecycle for an enterprise: employee
 | Charts | Recharts |
 | Email (escalation) | Resend |
 | Hosting | Vercel (frontend) + Supabase Cloud |
+
+Architecture Diagram:
+<img width="503" height="631" alt="image" src="https://github.com/user-attachments/assets/5a2dd271-65ac-49f9-a357-257e16bd0dd3" />
+
 
 ## Quick start
 
