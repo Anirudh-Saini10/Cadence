@@ -51,8 +51,16 @@ export const useAuth = create<AuthState>((set, get) => ({
   },
 
   signOut: async () => {
-    await supabase.auth.signOut();
+    // Clear local state FIRST so the UI redirects to /login immediately.
+    // The Supabase round-trip continues in the background; if it fails the
+    // onAuthStateChange listener will reconcile.
     set({ session: null, profile: null, demoRoleOverride: null });
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn("[cadence] signOut server call failed", e);
+    }
   },
 
   setDemoRole: (role) => {

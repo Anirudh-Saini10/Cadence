@@ -80,8 +80,10 @@ export function AppShell() {
             variant="outline"
             size="sm"
             className="w-full justify-start"
-            onClick={async () => {
-              await signOut();
+            onClick={() => {
+              // Don't await — signOut clears local state synchronously; the
+              // server round-trip runs in the background.
+              void signOut();
               navigate("/login", { replace: true });
             }}
           >
