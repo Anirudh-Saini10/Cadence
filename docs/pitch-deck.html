@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cadence — Pitch Deck</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; margin:0; padding:40px; color:#1f2937; line-height:1.6; max-width:900px; margin:auto; }
+  h1 { font-size:2.2rem; margin-bottom:0.3rem; }
+  .subtitle { color:#6b7280; font-size:1.1rem; margin-bottom:2rem; }
+  h2 { font-size:1.3rem; margin-top:2rem; border-bottom:2px solid #3b82f6; padding-bottom:0.3rem; color:#1e40af; }
+  .tagline { background:#eff6ff; border-left:4px solid #3b82f6; padding:12px 16px; margin:1.5rem 0; font-weight:500; }
+  table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.95rem; }
+  th, td { border:1px solid #e5e7eb; padding:10px; text-align:left; }
+  th { background:#f9fafb; font-weight:600; }
+  .metric { display:inline-block; background:#f3f4f6; padding:8px 14px; border-radius:6px; margin:4px 4px 4px 0; font-size:0.9rem; }
+  .cta { background:#3b82f6; color:white; padding:12px 20px; border-radius:6px; display:inline-block; margin-top:1rem; font-weight:600; }
+  .page-break { page-break-after: always; }
+  ul { margin:0.5rem 0; padding-left:1.5rem; }
+  li { margin:0.3rem 0; }
+  @media print { body { padding:20px; } .page-break { page-break-after: always; } }
+</style>
+</head>
+<body>
+
+<h1>Cadence</h1>
+<div class="subtitle">Goal Setting & Performance Tracking Portal</div>
+<div class="tagline">AtomQuest Hackathon 1.0 — Complete enterprise performance management, from goal creation to quarterly analytics.</div>
+
+<p><strong>Live Demo:</strong> <a href="https://cadence-growth.vercel.app">cadence-growth.vercel.app</a></p>
+
+<h2>The Problem</h2>
+<ul>
+  <li>Enterprises track goals in spreadsheets — no version control, no audit trail</li>
+  <li>Managers can't see team progress without manual follow-ups</li>
+  <li>Quarterly check-ins are subjective; scoring is inconsistent across departments</li>
+  <li>Admins have zero visibility into org-wide completion rates</li>
+</ul>
+
+<h2>The Solution</h2>
+<p><strong>Cadence</strong> digitizes the full performance cycle:</p>
+<ol>
+  <li><strong>Admin</strong> opens a cycle (e.g., FY 2025-26)</li>
+  <li><strong>Employees</strong> author weighted OKRs with real-time validation</li>
+  <li><strong>Managers</strong> approve or return goals with one click</li>
+  <li><strong>System</strong> auto-advances phases, auto-scores check-ins via 5 UoM formulas</li>
+  <li><strong>Admin</strong> monitors completion, runs escalation nudges, exports analytics</li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2>Key Metrics</h2>
+<span class="metric">9 Cycle Phases</span>
+<span class="metric">5 Auto-Scoring UoM Formulas</span>
+<span class="metric">8 Thrust Areas</span>
+<span class="metric">3 Role Views (Employee / Manager / Admin)</span>
+<span class="metric">Zero Backend Code</span>
+<span class="metric">100% Free Tier</span>
+
+<h2>What We Built</h2>
+<table>
+<tr><th>Phase</th><th>Features</th></tr>
+<tr><td>Goal Setting</td><td>Weighted OKRs, live weightage bar, auto-validation (100%, min 10%, max 8 goals), submit for approval, manager return-to-draft</td></tr>
+<tr><td>Check-ins</td><td>Quarterly entry (Q1-Q4/Annual), 5 UoM formulas, achievement vs target viz, manager comments</td></tr>
+<tr><td>Admin</td><td>Cycle open/advance/reset, user management, goal force-reset, full audit log, analytics with charts, CSV export, escalation engine with email (Resend)</td></tr>
+<tr><td>UX</td><td>Role-aware Dashboard, demo view switcher, landing page, fast caching, error states everywhere</td></tr>
+</table>
+
+<h2>Tech Stack</h2>
+<table>
+<tr><th>Layer</th><th>Tech</th><th>Why</th></tr>
+<tr><td>Frontend</td><td>React 18 + Vite + TypeScript</td><td>Fast DX, type-safe</td></tr>
+<tr><td>Styling</td><td>TailwindCSS + shadcn/ui</td><td>Accessible, consistent</td></tr>
+<tr><td>State</td><td>Zustand + TanStack Query</td><td>Caching, minimal boilerplate</td></tr>
+<tr><td>Data + Auth</td><td>Supabase (Postgres + RLS)</td><td>Security at DB layer, no backend</td></tr>
+<tr><td>Charts</td><td>Recharts</td><td>Lightweight, React-native</td></tr>
+<tr><td>Email</td><td>Resend</td><td>100 emails/day free</td></tr>
+<tr><td>Hosting</td><td>Vercel</td><td>Auto-deploy from GitHub</td></tr>
+</table>
+
+<h2>Cost Optimisation</h2>
+<p>Free tier on <strong>every layer</strong>:</p>
+<ul>
+  <li>Vercel — unlimited static hosting</li>
+  <li>Supabase — Postgres + Auth + 500 MB</li>
+  <li>Resend — 100 emails/day</li>
+</ul>
+<p><strong>Zero server management. Zero backend code.</strong></p>
+
+<div class="page-break"></div>
+
+<h2>Demo Flow for Judges</h2>
+<p><strong>All passwords:</strong> <code>cadence123</code></p>
+<table>
+<tr><th>Account</th><th>Role</th><th>What to Show</th></tr>
+<tr><td>admin@cadence.demo</td><td>Admin</td><td>Open Cycles → Users → Analytics → Escalations. Use Demo View switcher to flip roles.</td></tr>
+<tr><td>manager@cadence.demo</td><td>Manager</td><td>Review Team goals → Approve/Return → Check Team Check-ins</td></tr>
+<tr><td>priya@cadence.demo</td><td>Employee</td><td>Create goals → Submit → Record quarterly check-ins</td></tr>
+</table>
+
+<h2>Why Cadence Wins</h2>
+<ul>
+  <li><strong>Complete E2E:</strong> Not a prototype — every role has a real workflow</li>
+  <li><strong>Smart scoring:</strong> 5 UoM formulas eliminate subjective manager bias</li>
+  <li><strong>Production-grade:</strong> RLS, audit logs, error handling, caching — not a toy</li>
+  <li><strong>Instant demo:</strong> One-click role switcher, demo seeder, live deploy</li>
+</ul>
+
+<div class="cta">Open Live Demo → cadence-growth.vercel.app</div>
+
+</body>
+</html>
