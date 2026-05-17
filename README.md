@@ -1,5 +1,188 @@
 # Cadence
 
+<svg width="100%" viewBox="0 0 680 820" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Cadence system architecture diagram</title>
+  <desc>Architecture of Cadence: React SPA on Vercel, Supabase PostgREST API, PostgreSQL with RLS and triggers, Auth via GoTrue JWT</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- ── TITLE ── -->
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="15" font-weight="600" fill="#0F172A" x="340" y="32" text-anchor="middle">Cadence — System Architecture</text>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="11" font-weight="400" fill="#64748B" x="340" y="50" text-anchor="middle">React · Supabase · PostgreSQL · Vercel · Zero custom backend</text>
+
+  <!-- ══════════════════════════════════════════════════════════
+       LAYER 1 — BROWSER / CLIENT
+  ══════════════════════════════════════════════════════════ -->
+  <rect x="30" y="68" width="620" height="186" rx="14" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="11" font-weight="600" fill="#1E40AF" x="46" y="88" letter-spacing="0.5">BROWSER  ·  Vercel CDN (free tier, global edge)</text>
+
+  <!-- React SPA box -->
+  <rect x="50" y="100" width="270" height="140" rx="10" fill="#DBEAFE" stroke="#93C5FD" stroke-width="0.8"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="13" font-weight="600" fill="#1E40AF" x="185" y="120" text-anchor="middle">React 18 SPA</text>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#3B82F6" x="185" y="135" text-anchor="middle">Vite · TypeScript · TailwindCSS</text>
+
+  <!-- Mini boxes inside SPA -->
+  <rect x="62" y="145" width="110" height="32" rx="6" fill="white" stroke="#BFDBFE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#1D4ED8" x="117" y="164" text-anchor="middle">Zustand Auth Store</text>
+
+  <rect x="62" y="185" width="110" height="32" rx="6" fill="white" stroke="#BFDBFE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#1D4ED8" x="117" y="204" text-anchor="middle">TanStack Query</text>
+
+  <rect x="198" y="145" width="110" height="32" rx="6" fill="white" stroke="#BFDBFE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#1D4ED8" x="253" y="164" text-anchor="middle">React Router v6</text>
+
+  <rect x="198" y="185" width="110" height="32" rx="6" fill="white" stroke="#BFDBFE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#1D4ED8" x="253" y="204" text-anchor="middle">Radix UI + Recharts</text>
+
+  <!-- Pages / Features box -->
+  <rect x="340" y="100" width="296" height="140" rx="10" fill="#F0FDF4" stroke="#86EFAC" stroke-width="0.8"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="13" font-weight="600" fill="#15803D" x="488" y="120" text-anchor="middle">Pages &amp; Features</text>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#16A34A" x="488" y="135" text-anchor="middle">Role-scoped routes · Suspense boundaries</text>
+
+  <rect x="352" y="145" width="128" height="32" rx="6" fill="white" stroke="#BBF7D0" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#15803D" x="416" y="164" text-anchor="middle">Goal Sheet · Check-ins</text>
+
+  <rect x="352" y="185" width="128" height="32" rx="6" fill="white" stroke="#BBF7D0" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#15803D" x="416" y="204" text-anchor="middle">Team · Analytics</text>
+
+  <rect x="496" y="145" width="128" height="32" rx="6" fill="white" stroke="#BBF7D0" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#15803D" x="560" y="164" text-anchor="middle">Admin · Escalations</text>
+
+  <rect x="496" y="185" width="128" height="32" rx="6" fill="white" stroke="#BBF7D0" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#15803D" x="560" y="204" text-anchor="middle">Landing · Login</text>
+
+  <!-- ══════════════════════════════════════════════════════════
+       CONNECTOR: Browser → Supabase
+  ══════════════════════════════════════════════════════════ -->
+  <line x1="340" y1="254" x2="340" y2="302" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <rect x="258" y="263" width="164" height="22" rx="6" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#4338CA" x="340" y="278" text-anchor="middle">supabase-js SDK  ·  JWT bearer token</text>
+
+  <!-- ══════════════════════════════════════════════════════════
+       LAYER 2 — SUPABASE CLOUD
+  ══════════════════════════════════════════════════════════ -->
+  <rect x="30" y="300" width="620" height="220" rx="14" fill="#FFF7ED" stroke="#FED7AA" stroke-width="1"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="11" font-weight="600" fill="#C2410C" x="46" y="320" letter-spacing="0.5">SUPABASE CLOUD  ·  Managed free tier</text>
+
+  <!-- GoTrue Auth -->
+  <rect x="50" y="332" width="162" height="172" rx="10" fill="#FFEDD5" stroke="#FDBA74" stroke-width="0.8"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="12" font-weight="600" fill="#C2410C" x="131" y="352" text-anchor="middle">GoTrue Auth</text>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#EA580C" x="131" y="366" text-anchor="middle">Email + Password</text>
+  <rect x="62" y="376" width="138" height="28" rx="6" fill="white" stroke="#FED7AA" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#9A3412" x="131" y="394" text-anchor="middle">JWT issued on login</text>
+  <rect x="62" y="412" width="138" height="28" rx="6" fill="white" stroke="#FED7AA" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#9A3412" x="131" y="430" text-anchor="middle">role claim in payload</text>
+  <rect x="62" y="448" width="138" height="28" rx="6" fill="white" stroke="#FED7AA" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#9A3412" x="131" y="466" text-anchor="middle">tg_auth_user_created</text>
+  <rect x="62" y="484" width="138" height="12" rx="3" fill="#FED7AA" stroke="none"/>
+
+  <!-- PostgREST API -->
+  <rect x="232" y="332" width="196" height="172" rx="10" fill="#FEF3C7" stroke="#FDE68A" stroke-width="0.8"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="12" font-weight="600" fill="#92400E" x="330" y="352" text-anchor="middle">PostgREST API</text>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#B45309" x="330" y="366" text-anchor="middle">Auto-generated REST from schema</text>
+  <rect x="244" y="376" width="172" height="28" rx="6" fill="white" stroke="#FDE68A" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#78350F" x="330" y="394" text-anchor="middle">Validates JWT on every request</text>
+  <rect x="244" y="412" width="172" height="28" rx="6" fill="white" stroke="#FDE68A" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#78350F" x="330" y="430" text-anchor="middle">RLS applied before query runs</text>
+  <rect x="244" y="448" width="172" height="28" rx="6" fill="white" stroke="#FDE68A" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#78350F" x="330" y="466" text-anchor="middle">Parameterised — no SQL injection</text>
+  <rect x="244" y="484" width="172" height="12" rx="3" fill="#FDE68A" stroke="none"/>
+
+  <!-- Realtime -->
+  <rect x="448" y="332" width="180" height="172" rx="10" fill="#F0FDFA" stroke="#99F6E4" stroke-width="0.8"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="12" font-weight="600" fill="#0F766E" x="538" y="352" text-anchor="middle">Realtime &amp; Storage</text>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#0D9488" x="538" y="366" text-anchor="middle">WebSocket subscriptions</text>
+  <rect x="460" y="376" width="156" height="28" rx="6" fill="white" stroke="#99F6E4" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#134E4A" x="538" y="394" text-anchor="middle">Live goal-sheet updates</text>
+  <rect x="460" y="412" width="156" height="28" rx="6" fill="white" stroke="#99F6E4" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#134E4A" x="538" y="430" text-anchor="middle">Edge Functions (planned)</text>
+  <rect x="460" y="448" width="156" height="28" rx="6" fill="white" stroke="#99F6E4" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#134E4A" x="538" y="466" text-anchor="middle">500 MB free storage</text>
+  <rect x="460" y="484" width="156" height="12" rx="3" fill="#99F6E4" stroke="none"/>
+
+  <!-- ══════════════════════════════════════════════════════════
+       CONNECTOR: Supabase → DB
+  ══════════════════════════════════════════════════════════ -->
+  <line x1="340" y1="520" x2="340" y2="562" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <rect x="230" y="529" width="220" height="22" rx="6" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="500" fill="#5B21B6" x="340" y="544" text-anchor="middle">PostgreSQL wire protocol  ·  RLS enforced</text>
+
+  <!-- ══════════════════════════════════════════════════════════
+       LAYER 3 — POSTGRESQL DATABASE
+  ══════════════════════════════════════════════════════════ -->
+  <rect x="30" y="560" width="620" height="238" rx="14" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="11" font-weight="600" fill="#5B21B6" x="46" y="580" letter-spacing="0.5">POSTGRESQL 15  ·  Supabase managed · Row Level Security on all 8 tables</text>
+
+  <!-- Tables column -->
+  <rect x="50" y="592" width="170" height="190" rx="10" fill="#EDE9FE" stroke="#C4B5FD" stroke-width="0.8"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="12" font-weight="600" fill="#5B21B6" x="135" y="612" text-anchor="middle">Core Tables</text>
+  <rect x="62" y="620" width="146" height="22" rx="5" fill="white" stroke="#DDD6FE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#4C1D95" x="135" y="635" text-anchor="middle">users · cycles · goals</text>
+  <rect x="62" y="648" width="146" height="22" rx="5" fill="white" stroke="#DDD6FE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#4C1D95" x="135" y="663" text-anchor="middle">checkins · checkin_comments</text>
+  <rect x="62" y="676" width="146" height="22" rx="5" fill="white" stroke="#DDD6FE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#4C1D95" x="135" y="691" text-anchor="middle">audit_logs</text>
+  <rect x="62" y="704" width="146" height="22" rx="5" fill="white" stroke="#DDD6FE" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#4C1D95" x="135" y="719" text-anchor="middle">escalation_rules · logs</text>
+  <rect x="62" y="740" width="146" height="32" rx="5" fill="#7C3AED" stroke="none"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="600" fill="white" x="135" y="760" text-anchor="middle">RLS on every table</text>
+
+  <!-- Triggers column -->
+  <rect x="240" y="592" width="190" height="190" rx="10" fill="#FCE7F3" stroke="#F9A8D4" stroke-width="0.8"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="12" font-weight="600" fill="#831843" x="335" y="612" text-anchor="middle">Business Rule Triggers</text>
+  <rect x="252" y="620" width="166" height="22" rx="5" fill="white" stroke="#F9A8D4" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#831843" x="335" y="635" text-anchor="middle">Max 8 goals per cycle</text>
+  <rect x="252" y="648" width="166" height="22" rx="5" fill="white" stroke="#F9A8D4" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#831843" x="335" y="663" text-anchor="middle">100% weightage validation</text>
+  <rect x="252" y="676" width="166" height="22" rx="5" fill="white" stroke="#F9A8D4" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#831843" x="335" y="691" text-anchor="middle">Lock on approve + audit log</text>
+  <rect x="252" y="704" width="166" height="22" rx="5" fill="white" stroke="#F9A8D4" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#831843" x="335" y="719" text-anchor="middle">UoM score compute (cap 150)</text>
+  <rect x="252" y="732" width="166" height="22" rx="5" fill="white" stroke="#F9A8D4" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#831843" x="335" y="747" text-anchor="middle">Shared goal achievement sync</text>
+  <rect x="252" y="760" width="166" height="12" rx="3" fill="#F9A8D4" stroke="none"/>
+
+  <!-- RLS helpers column -->
+  <rect x="450" y="592" width="178" height="190" rx="10" fill="#FFF1F2" stroke="#FECDD3" stroke-width="0.8"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="12" font-weight="600" fill="#881337" x="539" y="612" text-anchor="middle">RLS Policy Helpers</text>
+  <rect x="462" y="620" width="154" height="22" rx="5" fill="white" stroke="#FECDD3" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#881337" x="539" y="635" text-anchor="middle">current_role() → user_role</text>
+  <rect x="462" y="648" width="154" height="22" rx="5" fill="white" stroke="#FECDD3" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#881337" x="539" y="663" text-anchor="middle">is_my_report(uuid) → bool</text>
+  <rect x="462" y="676" width="154" height="44" rx="5" fill="white" stroke="#FECDD3" stroke-width="0.7"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#881337" x="539" y="694" text-anchor="middle">Employees: own goals only</text>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#881337" x="539" y="710" text-anchor="middle">Managers: direct reports</text>
+  <rect x="462" y="728" width="154" height="44" rx="5" fill="#BE123C" stroke="none"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" font-weight="600" fill="white" x="539" y="746" text-anchor="middle">Admins: full access</text>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#FECDD3" x="539" y="762" text-anchor="middle">auth.uid() checked per row</text>
+
+  <!-- ══════════════════════════════════════════════════════════
+       EXTERNAL: Resend email
+  ══════════════════════════════════════════════════════════ -->
+  <rect x="30" y="812" width="186" height="0" rx="8" fill="none"/>
+
+  <!-- LEGEND bottom right -->
+  <rect x="474" y="806" width="176" height="10" rx="4" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="0.7"/>
+
+  <!-- Legend items -->
+  <line x1="50" y1="812" x2="90" y2="812" stroke="#6366F1" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#64748B" x="96" y="816">SDK / JWT call</text>
+
+  <line x1="200" y1="812" x2="240" y2="812" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#64748B" x="246" y="816">DB wire protocol</text>
+
+  <rect x="380" y="806" width="10" height="10" rx="2" fill="#7C3AED" stroke="none"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#64748B" x="396" y="815">RLS enforced</text>
+
+  <rect x="480" y="806" width="10" height="10" rx="2" fill="#BE123C" stroke="none"/>
+  <text font-family="'Inter','Helvetica Neue',sans-serif" font-size="10" fill="#64748B" x="496" y="815">Trigger (cannot bypass)</text>
+
+</svg>
+
 > Goal Setting & Performance Tracking Portal — built for **AtomQuest Hackathon 1.0**.
 
 Cadence digitizes the full goal-management lifecycle for an enterprise: employees author goal sheets with weightage validation, managers approve and check in quarterly, and HR/admin governs cycles, audits, and analytics. The entire stack runs on free tiers — Supabase + Vercel — with row-level security enforcing the role model at the database layer.
