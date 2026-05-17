@@ -14,11 +14,27 @@ import { PlaceholderPage } from "@/pages/PlaceholderPage";
 import { GoalSheetPage } from "@/features/goals/GoalSheetPage";
 import { TeamListPage } from "@/features/team/TeamListPage";
 import { TeamReviewPage } from "@/features/team/TeamReviewPage";
+import { CheckinsPage } from "@/features/checkins/CheckinsPage";
+import { TeamCheckinsPage } from "@/features/checkins/TeamCheckinsPage";
+import { CycleAdminPage } from "@/features/admin/CycleAdminPage";
+import { AuditLogPage } from "@/features/admin/AuditLogPage";
+import { UsersAdminPage } from "@/features/admin/UsersAdminPage";
+import { AnalyticsPage } from "@/features/analytics/AnalyticsPage";
+import { EscalationsPage } from "@/features/escalations/EscalationsPage";
 import type { UserRole } from "@/types/database";
 
 const qc = new QueryClient({
   defaultOptions: {
-    queries: { staleTime: 30_000, retry: 1, refetchOnWindowFocus: false },
+    queries: {
+      // 5s staleTime = data is fresh for 5s after fetch.
+      // This prevents the infinite re-render loop that staleTime:0 causes,
+      // while still feeling responsive. Mutations call invalidateQueries()
+      // to force immediate refreshes after writes.
+      staleTime: 5_000,
+      gcTime: 5 * 60_000,
+      retry: 1,
+      refetchOnWindowFocus: true,
+    },
   },
 });
 
@@ -65,14 +81,15 @@ export default function App() {
           >
             <Route index element={<RoleHome />} />
             <Route path="goals"             element={<GoalSheetPage />} />
-            <Route path="checkins"          element={<PlaceholderPage title="Check-ins"        description="Quarterly achievement entry. UoM auto-scores on save."          phase="6 Check-ins" />} />
+            <Route path="checkins"          element={<CheckinsPage />} />
             <Route path="team"              element={<TeamListPage />} />
             <Route path="team/:employeeId"  element={<TeamReviewPage />} />
-            <Route path="team/checkins"     element={<PlaceholderPage title="Team Check-ins"   description="Planned vs. Actual per report, with structured comments."       phase="6 Check-ins" />} />
-            <Route path="admin/cycles"      element={<PlaceholderPage title="Cycle Management" description="Open/close cycles, configure dates, unlock goals."              phase="7 Audit + Cycles" />} />
-            <Route path="admin/audit"       element={<PlaceholderPage title="Audit Log"        description="Every post-lock change with diff and actor."                    phase="7 Audit + Cycles" />} />
-            <Route path="analytics"         element={<PlaceholderPage title="Analytics"        description="QoQ trends, completion heatmap, goal distribution."             phase="8 Analytics" />} />
-            <Route path="escalations"       element={<PlaceholderPage title="Escalations"      description="Rule-based reminders + email notifications via Resend."         phase="9 Escalation" />} />
+            <Route path="team/checkins"     element={<TeamCheckinsPage />} />
+            <Route path="admin/cycles"      element={<CycleAdminPage />} />
+            <Route path="admin/audit"       element={<AuditLogPage />} />
+            <Route path="admin/users"       element={<UsersAdminPage />} />
+            <Route path="analytics"         element={<AnalyticsPage />} />
+            <Route path="escalations"       element={<EscalationsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

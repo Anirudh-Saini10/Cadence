@@ -30,10 +30,13 @@ export async function returnGoal(goalId: string, reason: string): Promise<GoalRo
     .from("goals")
     .update({ status: "returned", returned_reason: reason })
     .eq("id", goalId)
-    .select()
-    .single();
+    .select();
+  
   if (error) throw error;
-  return data as GoalRow;
+  if (!data || data.length === 0) {
+    throw new Error("Could not update goal. It may be a private draft or already locked.");
+  }
+  return data[0] as GoalRow;
 }
 
 /** Lightweight summary used on the team list page. */

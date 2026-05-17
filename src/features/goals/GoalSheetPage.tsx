@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Send, Loader2, Info, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,7 +51,8 @@ export function GoalSheetPage() {
     totalWeight === TARGET_WEIGHTAGE_TOTAL &&
     effectiveGoals.every((g) => Number(g.weightage) >= MIN_WEIGHTAGE) &&
     effectiveGoals.every((g) => String(g.title ?? "").trim().length > 0) &&
-    goals.every((g) => g.status === "draft" || g.status === "returned");
+    !goals.some((g) => g.status === "locked") &&
+    goals.some((g) => g.status === "draft" || g.status === "returned");
 
   // ---- mutations ----
   const update = useMutation({

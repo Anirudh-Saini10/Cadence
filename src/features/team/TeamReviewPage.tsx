@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -46,7 +46,7 @@ export function TeamReviewPage() {
 
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: goalsQueryKey(employeeId, cycleId) });
-    qc.invalidateQueries({ queryKey: ["team-summary", me?.id, cycleId] });
+    qc.invalidateQueries({ queryKey: ["team-summary"] });
   };
 
   const approveAll = useMutation({
@@ -161,7 +161,7 @@ function ReviewGoalCard({
   const [reason, setReason] = useState("");
   const isLocked = goal.locked_at !== null;
   const isShared = goal.is_shared && goal.source_goal_id !== null;
-  const canActionReturn = goal.status === "submitted" || goal.status === "draft";
+  const canActionReturn = goal.status === "submitted";
 
   const ret = useMutation({
     mutationFn: () => returnGoal(goal.id, reason.trim()),

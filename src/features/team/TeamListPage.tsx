@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, ChevronRight, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/stores/authStore";
@@ -12,6 +13,7 @@ export function TeamListPage() {
   const { data: cycle } = useActiveCycle();
   const managerId = profile?.id;
   const cycleId = cycle?.id;
+  const qc = useQueryClient();
 
   const { data: rows = [], isLoading, error } = useQuery({
     queryKey: ["team-summary", managerId, cycleId],

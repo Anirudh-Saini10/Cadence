@@ -26,9 +26,9 @@ export interface UserRow {
 export interface CycleRow {
   id: string;
   name: string;
-  phase: CyclePhase;
   open_date: string;
   close_date: string;
+  phase: CyclePhase;
   status: CycleStatus;
   created_at: string;
 }
