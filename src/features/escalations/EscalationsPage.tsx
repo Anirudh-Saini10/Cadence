@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { 
   ShieldAlert, 
@@ -29,20 +29,41 @@ export function EscalationsPage() {
   const qc = useQueryClient();
   const [isChecking, setIsChecking] = useState(false);
   const [checkResult, setCheckResult] = useState<string | null>(null);
+  const [pendingId, setPendingId] = useState<string | null>(null);
+  const [toggleError, setToggleError] = useState<string | null>(null);
 
-  const { data: rules = [], isLoading: rLoading } = useQuery({
+  const { data: rawRules = [], isLoading: rLoading, error: rError } = useQuery({
     queryKey: ["escalation-rules"],
     queryFn: fetchEscalationRules,
   });
 
-  const { data: logs = [], isLoading: lLoading } = useQuery({
+  // Deduplicate by rule_type — show the first one per type
+  const rules = useMemo(() => {
+    const seen = new Set<string>();
+    return rawRules.filter((r) => {
+      if (seen.has(r.rule_type)) return false;
+      seen.add(r.rule_type);
+      return true;
+    });
+  }, [rawRules]);
+
+  const { data: logs = [], isLoading: lLoading, error: lError } = useQuery({
     queryKey: ["escalation-logs"],
     queryFn: fetchEscalationLogs,
   });
 
   const updateRule = useMutation({
     mutationFn: ({ id, patch }: { id: string; patch: any }) => updateEscalationRule(id, patch),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["escalation-rules"] }),
+    onMutate: ({ id }) => { setPendingId(id); setToggleError(null); },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["escalation-rules"] });
+      setPendingId(null);
+    },
+    onError: (err: Error) => {
+      setPendingId(null);
+      setToggleError(err.message);
+      window.setTimeout(() => setToggleError(null), 4000);
+    },
   });
 
   const handleRunCheck = async () => {
@@ -57,6 +78,17 @@ export function EscalationsPage() {
       setIsChecking(false);
     }
   };
+
+  if (rError || lError) {
+    return (
+      <div className="mx-auto max-w-6xl">
+        <div className="flex items-center gap-2 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+          <AlertCircle className="h-4 w-4 text-red-600" />
+          Could not load escalation data. Please try again.
+        </div>
+      </div>
+    );
+  }
 
   if (rLoading || lLoading) {
     return <div className="grid h-64 place-items-center"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
@@ -82,6 +114,12 @@ export function EscalationsPage() {
         </Button>
       </div>
 
+      {toggleError && (
+        <div className="flex items-center gap-2 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
+          <AlertCircle className="h-4 w-4 text-red-600" />
+          {toggleError}
+        </div>
+      )}
       {checkResult && (
         <div className="flex items-center gap-2 rounded-md border border-emerald-300 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
           <CheckCircle2 className="h-4 w-4 text-emerald-600" />
@@ -106,10 +144,10 @@ export function EscalationsPage() {
                       Escalate to {rule.target_role} after {rule.threshold_days} days.
                     </div>
                   </div>
-                  <Switch 
-                    checked={rule.is_active} 
+                  <Switch
+                    checked={rule.is_active}
                     onCheckedChange={(checked: boolean) => updateRule.mutate({ id: rule.id, patch: { is_active: checked } })}
-                    disabled={updateRule.isPending}
+                    disabled={pendingId === rule.id}
                   />
                 </div>
                 <div className="mt-4 flex items-center gap-2">

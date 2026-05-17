@@ -8,7 +8,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   Clock,
-  ArrowRight
+  ArrowRight,
+  RotateCcw
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -115,17 +116,29 @@ export function CycleAdminPage() {
               </div>
             </div>
 
-            <div className="mt-12 rounded-lg border border-amber-200 bg-amber-50 p-4">
-              <div className="flex gap-3">
-                <AlertTriangle className="h-5 w-5 shrink-0 text-amber-600" />
-                <div className="text-sm text-amber-800">
-                  <p className="font-semibold">Advance Phase with Caution</p>
-                  <p className="mt-1">
-                    Moving the phase to <span className="font-bold">Q1/Q2/Q3/Q4</span> will open check-ins for all employees. 
-                    This cannot be undone easily through the UI.
-                  </p>
+            <div className="mt-12 flex flex-col gap-4">
+              <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+                <div className="flex gap-3">
+                  <AlertTriangle className="h-5 w-5 shrink-0 text-amber-600" />
+                  <div className="text-sm text-amber-800">
+                    <p className="font-semibold">Advance Phase with Caution</p>
+                    <p className="mt-1">
+                      Moving the phase to <span className="font-bold">Q1/Q2/Q3/Q4</span> will open check-ins for all employees.
+                      This cannot be undone easily through the UI.
+                    </p>
+                  </div>
                 </div>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-fit gap-2"
+                onClick={() => update.mutate({ id: activeCycle.id, patch: { phase: "goal_setting" } })}
+                disabled={update.isPending || activeCycle.phase === "goal_setting"}
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                Reset to Goal Setting
+              </Button>
             </div>
           </CardContent>
         </Card>
