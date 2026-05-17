@@ -14,7 +14,7 @@ Cadence digitizes the full goal-management lifecycle for an enterprise: employee
 | Email (escalation) | Resend |
 | Hosting | Vercel (frontend) + Supabase Cloud |
 
-Architecture Diagram:
+
 <img width="503" height="631" alt="image" src="https://github.com/user-attachments/assets/5a2dd271-65ac-49f9-a357-257e16bd0dd3" />
 
 
