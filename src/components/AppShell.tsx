@@ -19,13 +19,6 @@ import { Button } from "@/components/ui/button";
 import { useAuth, useEffectiveRole } from "@/stores/authStore";
 import { useActiveCycle } from "@/hooks/useActiveCycle";
 import { cn } from "@/lib/utils";
-import type { UserRole } from "@/types/database";
-
-const HOME_MAP: Record<UserRole, string> = {
-  employee: "/goals",
-  manager: "/team",
-  admin: "/admin/cycles",
-};
 
 function SidebarLink({
   to,
@@ -64,21 +57,17 @@ export function AppShell() {
   const signOut = useAuth((s) => s.signOut);
   const { data: cycle } = useActiveCycle();
 
-  const homePath = role ? HOME_MAP[role] : "/";
-
-  // When role changes via the demo switcher, redirect to the home page
-  // for the new role. Use a ref to avoid re-running on every pathname change.
+  // When role changes via the demo switcher, redirect to dashboard.
   const lastRole = React.useRef<string | null>(null);
   useEffect(() => {
     if (!role) return;
     if (lastRole.current !== role) {
       lastRole.current = role;
-      // Only redirect if we're not already on this role's home page
-      if (location.pathname !== homePath) {
-        navigate(homePath, { replace: true });
+      if (location.pathname !== "/dashboard") {
+        navigate("/dashboard", { replace: true });
       }
     }
-  }, [role, homePath, navigate, location.pathname]);
+  }, [role, navigate, location.pathname]);
 
   const user = useAuth((s) => s.user);
 
@@ -118,7 +107,7 @@ export function AppShell() {
           {/* ---- Employee nav ---- */}
           {role === "employee" && (
             <>
-              <SidebarLink to="/goals" icon={ClipboardList} label="Dashboard" />
+              <SidebarLink to="/dashboard" icon={ClipboardList} label="Dashboard" />
               <SidebarLink to="/goals" icon={ClipboardList} label="My Goals" />
               <SidebarLink to="/checkins" icon={CalendarCheck2} label="Check-ins" />
             </>
@@ -126,7 +115,7 @@ export function AppShell() {
           {/* ---- Manager nav ---- */}
           {role === "manager" && (
             <>
-              <SidebarLink to="/team" icon={ClipboardList} label="Dashboard" />
+              <SidebarLink to="/dashboard" icon={ClipboardList} label="Dashboard" />
               <SidebarLink to="/goals" icon={ClipboardList} label="My Goals" />
               <SidebarLink to="/checkins" icon={CalendarCheck2} label="Check-ins" />
               <SidebarLink to="/team" icon={ClipboardCheck} label="Team" />
@@ -137,7 +126,7 @@ export function AppShell() {
           {/* ---- Admin nav ---- */}
           {role === "admin" && (
             <>
-              <SidebarLink to="/admin/cycles" icon={ClipboardList} label="Dashboard" />
+              <SidebarLink to="/dashboard" icon={ClipboardList} label="Dashboard" />
               <SidebarLink to="/goals" icon={ClipboardList} label="My Goals" />
               <SidebarLink to="/checkins" icon={CalendarCheck2} label="Check-ins" />
               <SidebarLink to="/admin/cycles" icon={CalendarRange} label="Cycles" />

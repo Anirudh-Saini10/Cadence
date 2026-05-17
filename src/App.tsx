@@ -7,10 +7,11 @@ import {
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useAuth, useEffectiveRole } from "@/stores/authStore";
+import { useAuth } from "@/stores/authStore";
 import { AppShell } from "@/components/AppShell";
 import { LoginPage } from "@/pages/LoginPage";
-import { PlaceholderPage } from "@/pages/PlaceholderPage";
+import { LandingPage } from "@/pages/LandingPage";
+import { DashboardPage } from "@/features/dashboard/DashboardPage";
 import { GoalSheetPage } from "@/features/goals/GoalSheetPage";
 import { TeamListPage } from "@/features/team/TeamListPage";
 import { TeamReviewPage } from "@/features/team/TeamReviewPage";
@@ -21,7 +22,6 @@ import { AuditLogPage } from "@/features/admin/AuditLogPage";
 import { UsersAdminPage } from "@/features/admin/UsersAdminPage";
 import { AnalyticsPage } from "@/features/analytics/AnalyticsPage";
 import { EscalationsPage } from "@/features/escalations/EscalationsPage";
-import type { UserRole } from "@/types/database";
 
 const qc = new QueryClient({
   defaultOptions: {
@@ -52,15 +52,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-function RoleHome() {
-  const role = useEffectiveRole();
-  const map: Record<UserRole, string> = {
-    employee: "/goals",
-    manager: "/team",
-    admin: "/admin/cycles",
-  };
-  if (!role) return null;
-  return <Navigate to={map[role]} replace />;
+function HomeRoute() {
+  const session = useAuth((s) => s.session);
+  if (session) return <Navigate to="/dashboard" replace />;
+  return <LandingPage />;
 }
 
 export default function App() {
@@ -71,6 +66,7 @@ export default function App() {
     <QueryClientProvider client={qc}>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<HomeRoute />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
             element={
@@ -79,7 +75,8 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<RoleHome />} />
+            <Route index element={<DashboardPage />} />
+            <Route path="dashboard" element={<DashboardPage />} />
             <Route path="goals"             element={<GoalSheetPage />} />
             <Route path="checkins"          element={<CheckinsPage />} />
             <Route path="team"              element={<TeamListPage />} />

@@ -10,9 +10,12 @@ import {
   Target, 
   Loader2,
   PieChart as PieIcon,
-  Info
+  Info,
+  Download
 } from "lucide-react";
+import { downloadCSV } from "@/lib/export";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useActiveCycle } from "@/hooks/useActiveCycle";
 import { fetchDeptStats, fetchScoreTrends, fetchGoalDistribution } from "./analyticsApi";
 
@@ -48,11 +51,32 @@ export function AnalyticsPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Performance Analytics</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Real-time insights for {cycle.name} · {cycle.phase.replace("_", " ")}
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Performance Analytics</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Real-time insights for {cycle.name} · {cycle.phase.replace("_", " ")}
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            downloadCSV(
+              `analytics-${cycle.name}.csv`,
+              ["Department", "Total Goals", "Approved", "Completion %"],
+              deptStats.map((d: any) => [
+                d.department,
+                String(d.total),
+                String(d.approved),
+                `${Math.round((d.approved / (d.total || 1)) * 100)}%`,
+              ])
+            );
+          }}
+        >
+          <Download className="mr-1.5 h-3.5 w-3.5" />
+          Export CSV
+        </Button>
       </div>
 
       {/* Summary Cards */}
