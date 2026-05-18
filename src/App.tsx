@@ -22,6 +22,7 @@ import { AuditLogPage } from "@/features/admin/AuditLogPage";
 import { UsersAdminPage } from "@/features/admin/UsersAdminPage";
 import { AnalyticsPage } from "@/features/analytics/AnalyticsPage";
 import { EscalationsPage } from "@/features/escalations/EscalationsPage";
+import { MobileWarning } from "@/components/MobileWarning";
 
 const qc = new QueryClient({
   defaultOptions: {
@@ -64,6 +65,7 @@ export default function App() {
 
   return (
     <QueryClientProvider client={qc}>
+      <MobileWarning />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomeRoute />} />
