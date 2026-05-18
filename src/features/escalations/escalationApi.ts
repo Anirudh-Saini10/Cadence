@@ -2,14 +2,21 @@ import { supabase } from "@/lib/supabase";
 import type { EscalationRuleRow, EscalationLogRow } from "@/types/database";
 import { sendEmail, escalationEmail } from "@/lib/email";
 
-/** Fetch all escalation rules. */
+/** Fetch all escalation rules, deduplicated by rule_type (oldest wins). */
 export async function fetchEscalationRules(): Promise<EscalationRuleRow[]> {
   const { data, error } = await supabase
     .from("escalation_rules")
     .select("*")
-    .order("rule_type");
+    .order("created_at", { ascending: true });
   if (error) throw error;
-  return (data ?? []) as EscalationRuleRow[];
+  const rows = (data ?? []) as EscalationRuleRow[];
+  // Deduplicate by rule_type — keep the FIRST (oldest) one. Stable across refetches.
+  const seen = new Set<string>();
+  return rows.filter((r) => {
+    if (seen.has(r.rule_type)) return false;
+    seen.add(r.rule_type);
+    return true;
+  });
 }
 
 /** Update an escalation rule (toggle active, change threshold). */
