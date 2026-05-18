@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { 
   ShieldAlert, 
@@ -32,20 +32,10 @@ export function EscalationsPage() {
   const [pendingId, setPendingId] = useState<string | null>(null);
   const [toggleError, setToggleError] = useState<string | null>(null);
 
-  const { data: rawRules = [], isLoading: rLoading, error: rError } = useQuery({
+  const { data: rules = [], isLoading: rLoading, error: rError } = useQuery({
     queryKey: ["escalation-rules"],
     queryFn: fetchEscalationRules,
   });
-
-  // Deduplicate by rule_type — show the first one per type
-  const rules = useMemo(() => {
-    const seen = new Set<string>();
-    return rawRules.filter((r) => {
-      if (seen.has(r.rule_type)) return false;
-      seen.add(r.rule_type);
-      return true;
-    });
-  }, [rawRules]);
 
   const { data: logs = [], isLoading: lLoading, error: lError } = useQuery({
     queryKey: ["escalation-logs"],
