@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import type { EscalationRuleRow, EscalationLogRow } from "@/types/database";
+import { sendEmail, escalationEmail } from "@/lib/email";
 
 /** Fetch all escalation rules. */
 export async function fetchEscalationRules(): Promise<EscalationRuleRow[]> {
@@ -56,7 +57,7 @@ export async function runEscalationCheck(): Promise<{ triggered: number }> {
   // 2. Get active cycle
   const { data: cycle, error: cErr } = await supabase
     .from("cycles")
-    .select("id, phase")
+    .select("id, phase, name")
     .eq("status", "active")
     .maybeSingle();
   if (cErr) throw cErr;
@@ -119,7 +120,24 @@ export async function runEscalationCheck(): Promise<{ triggered: number }> {
           status: "open",
           detail: { cycle_id: cycleId, rule_type: rule.rule_type },
         });
-        if (!insErr) totalTriggered++;
+        if (!insErr) {
+          totalTriggered++;
+          // Send email notification to target user
+          const { data: targetUser } = await supabase
+            .from("users")
+            .select("name,email")
+            .eq("id", uid)
+            .single();
+          if (targetUser) {
+            await sendEmail(escalationEmail({
+              targetEmail: targetUser.email,
+              targetName: targetUser.name,
+              ruleType: rule.rule_type,
+              cycleName: cycle?.name ?? "Active Cycle",
+              thresholdDays: rule.threshold_days,
+            }));
+          }
+        }
       }
     }
   }

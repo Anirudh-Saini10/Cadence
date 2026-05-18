@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { sendEmail, goalSubmittedEmail } from "@/lib/email";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Send, Loader2, Info, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -89,10 +90,29 @@ export function GoalSheetPage() {
   const submit = useMutation({
     mutationFn: () => submitAllGoals(employeeId!, cycleId!),
     onMutate: () => { setSubmitError(null); setSubmitSuccess(false); },
-    onSuccess: () => {
+    onSuccess: async () => {
       qc.invalidateQueries({ queryKey: goalsQueryKey(employeeId, cycleId) });
       setSubmitSuccess(true);
       window.setTimeout(() => setSubmitSuccess(false), 4000);
+      // Send email notification to manager
+      if (profile?.manager_id) {
+        try {
+          const { data: mgr } = await import("@/lib/supabase").then(m =>
+            m.supabase.from("users").select("name,email").eq("id", profile.manager_id!).single()
+          );
+          if (mgr) {
+            await sendEmail(goalSubmittedEmail({
+              managerEmail: mgr.email,
+              managerName: mgr.name,
+              employeeName: profile.name,
+              cycleName: cycle?.name ?? "Active Cycle",
+              goalCount: goals.filter(g => g.status === "draft" || g.status === "returned").length,
+            }));
+          }
+        } catch (e) {
+          console.warn("[cadence] manager email lookup failed", e);
+        }
+      }
     },
     onError: (e: Error) => setSubmitError(e.message),
   });

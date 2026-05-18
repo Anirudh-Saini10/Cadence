@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { sendEmail, goalApprovedEmail, goalReturnedEmail } from "@/lib/email";
 import { Link, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -51,10 +52,17 @@ export function TeamReviewPage() {
 
   const approveAll = useMutation({
     mutationFn: () => approveAllGoals(employeeId!, cycleId!),
-    onSuccess: () => {
+    onSuccess: async () => {
       invalidate();
       setSuccessMsg("All submitted goals approved & locked.");
       window.setTimeout(() => setSuccessMsg(null), 4000);
+      if (employee?.email) {
+        await sendEmail(goalApprovedEmail({
+          employeeEmail: employee.email,
+          employeeName: employee.name,
+          cycleName: cycle?.name ?? "Active Cycle",
+        }));
+      }
     },
   });
 
@@ -135,6 +143,9 @@ export function TeamReviewPage() {
               index={i}
               goal={g}
               onChanged={invalidate}
+              employeeEmail={employee?.email ?? ""}
+              employeeName={employee?.name ?? ""}
+              cycleName={cycle?.name ?? "Active Cycle"}
             />
           ))}
         </div>
@@ -151,11 +162,14 @@ export function TeamReviewPage() {
 }
 
 function ReviewGoalCard({
-  index, goal, onChanged,
+  index, goal, onChanged, employeeEmail, employeeName, cycleName,
 }: {
   index: number;
   goal: import("@/types/database").GoalRow;
   onChanged: () => void;
+  employeeEmail: string;
+  employeeName: string;
+  cycleName: string;
 }) {
   const [showReturn, setShowReturn] = useState(false);
   const [reason, setReason] = useState("");
@@ -165,9 +179,17 @@ function ReviewGoalCard({
 
   const ret = useMutation({
     mutationFn: () => returnGoal(goal.id, reason.trim()),
-    onSuccess: () => {
+    onSuccess: async () => {
       onChanged();
       setShowReturn(false);
+      if (employeeEmail) {
+        await sendEmail(goalReturnedEmail({
+          employeeEmail,
+          employeeName,
+          cycleName,
+          reason: reason.trim(),
+        }));
+      }
       setReason("");
     },
   });
