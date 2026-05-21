@@ -1,6 +1,6 @@
 # Cadence
 
-> Goal Setting & Performance Tracking Portal — built for **AtomQuest Hackathon 1.0**.
+> Goal Setting & Performance Tracking Portal
 
 Cadence digitizes the full goal-management lifecycle for an enterprise: employees author weighted OKRs with real-time validation, managers review and approve via a structured workflow, quarterly check-ins auto-score against 5 UoM formulas, and HR/Admin governs performance cycles, audits every action, and monitors org-wide analytics. Row-level security enforces the role model directly at the database layer.
 
