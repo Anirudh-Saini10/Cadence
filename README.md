@@ -189,4 +189,4 @@ Free-tier on every layer:
 
 Zero server management. Zero backend code.
 
-Built by Aniruddha Saini for AtomQuest.
+Built by Aniruddha Saini 
